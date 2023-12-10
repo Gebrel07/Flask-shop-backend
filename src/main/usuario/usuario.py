@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.extensions import db
 
 from .carrinho import Carrinho
+from .enderecos import Endereco
 from .favoritos import Favoritos
 
 
@@ -32,4 +33,11 @@ class Usuario(db.Model):
         cascade="all, delete",
         passive_deletes=True,
         order_by=Carrinho.data_inclusao,
+    )
+
+    enderecos: Mapped[List[Endereco]] = relationship(
+        argument="Endereco",
+        cascade="all, delete",
+        passive_deletes=True,
+        order_by=Endereco.rua,
     )

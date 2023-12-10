@@ -3,6 +3,7 @@ from flask_jwt_extended import get_current_user, jwt_required
 
 from src.utils import make_json_resp, validate_json_data, validate_user_id
 
+from .addr_handler import AddrHandler
 from .cart_handler import CartHandler
 from .fav_handler import FavHandler
 from .user_handler import UserHandler
@@ -188,3 +189,25 @@ def remove_from_cart(id_usuario: int, id_estoque: int):
     return make_json_resp(
         ok=res["ok"], msg=res["msg"], carrinho=res["carrinho"]
     )
+
+
+@usuario_bp.route("/<int:id_usuario>/enderecos/", methods=["GET"])
+@jwt_required()
+def get_enderecos(id_usuario: int):
+    usuario = Usuario.query.get(id_usuario)
+
+    if not usuario:
+        return make_json_resp(
+            ok=False,
+            msg=f"Usuário de ID: {id_usuario} não encontrado",
+            status=404,
+        )
+
+    validate_user = validate_user_id(user_id=id_usuario)
+    if not validate_user["ok"]:
+        return validate_user["resp"]
+
+    addr = AddrHandler()
+    res = addr.get_enderecos(id_usuario=usuario.id)
+
+    return make_json_resp(ok=True, enderecos=res)

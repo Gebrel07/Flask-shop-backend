@@ -39,7 +39,7 @@ def upgrade():
     op.create_table('ProdutoImg',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_estoque', sa.Integer(), nullable=False),
-    sa.Column('caminho', sa.String(length=255), nullable=False, unique=True),
+    sa.Column('caminho', sa.String(length=255), nullable=False),
     sa.Column('ordem', sa.Integer(), server_default=sa.text('1'), nullable=False),
     sa.ForeignKeyConstraint(['id_estoque'], ['ProdutoEstoque.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

@@ -5,8 +5,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.extensions import db
 
-from .caracteristicas import ProdutoCaract
-from .estoque import ProdutoEstoque
+from ..caract import ProdutoCaract
+from ..estoque import ProdutoEstoque
 
 
 class Produto(db.Model):

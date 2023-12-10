@@ -1,6 +1,7 @@
-from .caracteristicas import ProdutoCaract
+from .caract import ProdutoCaract
 from .estoque import ProdutoEstoque
-from .produto import Produto
+from .img.imagens import ProdutoImg
+from .prod import Produto
 from .routes import produtos_bp
 
 __all__ = [
@@ -8,4 +9,5 @@ __all__ = [
     "Produto",
     "ProdutoCaract",
     "ProdutoEstoque",
+    "ProdutoImg",
 ]

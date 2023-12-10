@@ -11,9 +11,7 @@ class ProdutoImg(db.Model):
     id_estoque: Mapped[int] = mapped_column(
         ForeignKey("ProdutoEstoque.id", ondelete="CASCADE"), nullable=False
     )
-    caminho: Mapped[str] = mapped_column(
-        db.String(255), nullable=False, unique=True
-    )
+    caminho: Mapped[str] = mapped_column(db.String(255), nullable=False)
     ordem: Mapped[int] = mapped_column(
         db.Integer, nullable=False, server_default=text("1")
     )

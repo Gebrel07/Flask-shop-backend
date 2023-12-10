@@ -38,6 +38,25 @@ def make_json_resp(
     return jsonify(res), status
 
 
+def get_pagination_json(
+    pagination: Pagination, data: list[dict[str, Any]]
+) -> dict[str, Any]:
+    res = {"data": data}
+
+    attrs = (
+        "has_next",
+        "has_prev",
+        "page",
+        "pages",
+        "per_page",
+    )
+
+    for attr in attrs:
+        res[attr] = getattr(pagination, attr)
+
+    return res
+
+
 def validate_user_id(user_id: int) -> dict[str, Any]:
     """Validar se id do usuário que está sendo acessado é corresponde
     às credenciais providenciadas via jwt

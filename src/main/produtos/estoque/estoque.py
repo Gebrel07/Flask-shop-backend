@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.extensions import db
 
-from .imagens import ProdutoImg
+from ..img import ProdutoImg
 
 
 class ProdutoEstoque(db.Model):

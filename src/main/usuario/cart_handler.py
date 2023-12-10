@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Any
-from urllib.parse import urljoin
 
 from flask import url_for
 
@@ -15,9 +14,7 @@ class CartHandler:
     def __init__(self) -> None:
         pass
 
-    def get_carrinho(
-        self, id_usuario: int, img_base_url: str
-    ) -> list[dict[str, Any]] | None:
+    def get_carrinho(self, id_usuario: int) -> list[dict[str, Any]] | None:
         usuario = Usuario.query.get(id_usuario)
 
         if not usuario:
@@ -38,11 +35,10 @@ class CartHandler:
             if item.estoque.imgs:
                 # get first img url
                 img = item.estoque.imgs[0]
-                url = urljoin(
-                    base=img_base_url,
-                    url=url_for(
-                        endpoint="produtos.get_img_produto", id_img=img.id
-                    ),
+                url = url_for(
+                    endpoint="produtos.get_img_produto",
+                    _external=True,
+                    id_img=img.id,
                 )
                 aux["img"] = url
 

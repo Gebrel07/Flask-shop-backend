@@ -20,9 +20,7 @@ def get_usuario():
     usuario = get_current_user()
 
     handler = UserHandler()
-    user_obj = handler.get_infos_usuario(
-        usuario=usuario, img_base_url=request.url_root
-    )
+    user_obj = handler.get_infos_usuario(usuario=usuario)
 
     return make_json_resp(ok=True, usuario=user_obj)
 
@@ -44,9 +42,7 @@ def get_favs(id_usuario: int):
         return validate_user["resp"]
 
     fav = FavHandler()
-    res = fav.get_favoritos(
-        id_usuario=id_usuario, img_base_url=request.root_url
-    )
+    res = fav.get_favoritos(id_usuario=id_usuario)
 
     return make_json_resp(ok=True, favoritos=res)
 
@@ -125,9 +121,7 @@ def get_carrinho(id_usuario: int):
         return validate_user["resp"]
 
     cart = CartHandler()
-    res = cart.get_carrinho(
-        id_usuario=usuario.id, img_base_url=request.root_url
-    )
+    res = cart.get_carrinho(id_usuario=usuario.id)
 
     return make_json_resp(ok=True, carrinho=res)
 

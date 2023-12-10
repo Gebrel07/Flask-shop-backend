@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Any
-from urllib.parse import urljoin
 
 from flask import url_for
 from sqlalchemy.exc import IntegrityError
@@ -16,9 +15,7 @@ class FavHandler:
     def __init__(self) -> None:
         pass
 
-    def get_favoritos(
-        self, id_usuario: int, img_base_url: str
-    ) -> list[dict[str, Any]] | None:
+    def get_favoritos(self, id_usuario: int) -> list[dict[str, Any]] | None:
         usuario = Usuario.query.get(id_usuario)
 
         if not usuario:
@@ -35,11 +32,10 @@ class FavHandler:
             if item.produto.estoque:
                 # get first img url
                 img = item.produto.estoque[0].imgs[0]
-                url = urljoin(
-                    base=img_base_url,
-                    url=url_for(
-                        endpoint="produtos.get_img_produto", id_img=img.id
-                    ),
+                url = url_for(
+                    endpoint="produtos.get_img_produto",
+                    _external=True,
+                    id_img=img.id,
                 )
                 aux["img"] = url
 

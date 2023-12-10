@@ -1,5 +1,4 @@
-from urllib.parse import urljoin
-
+from flask import url_for
 from flask_jwt_extended import create_access_token, get_csrf_token
 
 from src.extensions import bcrypt, db
@@ -11,12 +10,14 @@ class UserHandler:
     def __init__(self) -> None:
         pass
 
-    def get_infos_usuario(self, usuario: Usuario, img_base_url: str):
+    def get_infos_usuario(self, usuario: Usuario):
         user_obj = {
             "id": usuario.id,
             "nome": usuario.nome,
             "email": usuario.email,
-            "profile_pic": urljoin(base=img_base_url, url="/static/user.png"),
+            "profile_pic": url_for(
+                "static", filename="user.png", _external=True
+            ),
         }
         return user_obj
 
@@ -74,9 +75,7 @@ class UserHandler:
         res["access_token"] = token
         res["csrf_access_token"] = get_csrf_token(encoded_token=token)
 
-        res["usuario"] = self.get_infos_usuario(
-            usuario=usuario, img_base_url=img_base_url
-        )
+        res["usuario"] = self.get_infos_usuario(usuario=usuario)
 
         return res
 
@@ -123,8 +122,6 @@ class UserHandler:
         res["access_token"] = token
         res["csrf_access_token"] = get_csrf_token(encoded_token=token)
 
-        res["usuario"] = self.get_infos_usuario(
-            usuario=new_user, img_base_url=img_base_url
-        )
+        res["usuario"] = self.get_infos_usuario(usuario=new_user)
 
         return res

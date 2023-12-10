@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-
 from flask import Blueprint, abort, jsonify, request, send_file, url_for
 
 from src.extensions import db
@@ -107,9 +105,8 @@ def __get_estoque(prod: Produto):
 def __get_imgs(estoque: ProdutoEstoque):
     res = []
     for img in estoque.imgs:
-        url = urljoin(
-            base=request.root_url,
-            url=url_for(endpoint="produtos.get_img_produto", id_img=img.id),
+        url = url_for(
+            endpoint="produtos.get_img_produto", _external=True, id_img=img.id
         )
         res.append(url)
     return res

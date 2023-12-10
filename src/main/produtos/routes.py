@@ -9,11 +9,14 @@ from src.utils import make_json_resp
 from .caracteristicas import ProdutoCaract
 from .estoque import ProdutoEstoque
 from .imagens import ProdutoImg
+from .prod_handler import ProdHandler
 from .produto import Produto
 
 produtos_bp = Blueprint(
     name="produtos", import_name=__name__, url_prefix="/produtos"
 )
+
+produto = ProdHandler()
 
 
 @produtos_bp.route("/")
@@ -67,6 +70,12 @@ def get_img_produto(id_img: int):
         return abort(404)
 
     return send_file(path_or_file=img.caminho)
+
+
+@produtos_bp.route("/destaques")
+def get_destaques():
+    res = produto.get_destaques()
+    return make_json_resp(ok=True, destaques=res)
 
 
 def __get_caracts(prod: Produto):

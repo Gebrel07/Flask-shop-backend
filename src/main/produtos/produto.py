@@ -18,6 +18,9 @@ class Produto(db.Model):
     preco: Mapped[float] = mapped_column(
         db.Float(2), nullable=False, server_default=text("0")
     )
+    destaque: Mapped[bool] = mapped_column(
+        db.Boolean, nullable=False, server_default=text("0")
+    )
 
     # relationships
     caracts: Mapped[List["ProdutoCaract"]] = relationship(

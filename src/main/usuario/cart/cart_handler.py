@@ -1,75 +1,51 @@
 from datetime import datetime
 from typing import Any
 
-from flask import url_for
-
 from src.extensions import db
+from src.main.produtos import ProdutoEstoque
+from src.main.produtos.img import ImgHandler
 
-from ..produtos import ProdutoEstoque
+from ..usr import Usuario
 from .carrinho import Carrinho
-from .usuario import Usuario
 
 
 class CartHandler:
     def __init__(self) -> None:
-        pass
+        self.img_handler = ImgHandler()
 
-    def get_carrinho(self, id_usuario: int) -> list[dict[str, Any]] | None:
-        usuario = Usuario.query.get(id_usuario)
+    def get_cart_json(self, cart: Carrinho) -> dict[str, Any]:
+        res = {
+            "id": cart.id_estoque,
+            "nome": cart.estoque.produto.nome,
+            "preco": cart.estoque.produto.preco,
+            "img": self.img_handler.get_prod_img(prod=cart.estoque.produto),
+            "cor": cart.estoque.cor,
+            "tamanho": cart.estoque.tamanho,
+            "qtd": cart.qtd,
+        }
+        return res
 
-        if not usuario:
+    def get_user_cart(self, usuario: Usuario) -> list[dict[str, Any]] | None:
+        if not usuario.carrinho:
             return None
 
-        cart_items = []
+        cart = []
         for item in usuario.carrinho:
-            aux = {
-                "id_prod": item.estoque.produto.id,
-                "nome": item.estoque.produto.nome,
-                "preco": item.estoque.produto.preco,
-                "id_estoque": item.id_estoque,
-                "cor": item.estoque.cor,
-                "tamanho": item.estoque.tamanho,
-                "qtd": item.qtd,
-            }
+            cart.append(self.get_cart_json(cart=item))
 
-            if item.estoque.imgs:
-                # get first img url
-                img = item.estoque.imgs[0]
-                url = url_for(
-                    endpoint="produtos.get_img_produto",
-                    _external=True,
-                    id_img=img.id,
-                )
-                aux["img"] = url
+        return cart
 
-            cart_items.append(aux)
-
-        return cart_items
-
-    def __get_cart_ids(self, id_usuario: int) -> list[int] | None:
-        usuario = Usuario.query.get(id_usuario)
-
-        if not usuario:
-            return None
-
-        ids = []
-        for item in usuario.carrinho:
-            ids.append(item.id_estoque)
-
-        return ids
-
-    def adicionar_item(
+    def add_item(
         self, id_usuario: int, id_estoque: int, qtd: int
     ) -> dict[str, Any]:
         """Adiciona item do Estoque ao Carrinho de compras
 
         Returns:
-            dict: {ok: bool, msg: str, carrinho: list[int]}
+            dict: {ok: bool, msg: str}
         """
         res = {
             "ok": True,
             "msg": "Adicionado com sucesso!",
-            "carrinho": self.__get_cart_ids(id_usuario=id_usuario),
         }
 
         estoque = ProdutoEstoque.query.get(id_estoque)
@@ -98,7 +74,6 @@ class CartHandler:
             try:
                 item_carrinho.qtd = qtd
                 db.session.commit()
-                res["carrinho"] = self.__get_cart_ids(id_usuario=id_usuario)
                 return res
             except Exception:
                 db.session.rollback()
@@ -116,7 +91,6 @@ class CartHandler:
                 )  # type: ignore
                 db.session.add(new_cart_item)
                 db.session.commit()
-                res["carrinho"] = self.__get_cart_ids(id_usuario=id_usuario)
                 return res
             except Exception:
                 db.session.rollback()
@@ -124,16 +98,15 @@ class CartHandler:
                 res["msg"] = "Erro interno ao adicionar ao carrinho"
                 return res
 
-    def remover_item(self, id_usuario: int, id_estoque: int) -> dict[str, Any]:
+    def remove_item(self, id_usuario: int, id_estoque: int) -> dict[str, Any]:
         """Remove item do Carrinho de compras
 
         Returns:
-            dict: {ok: bool, msg: str, carrinho: list[int]}
+            dict: {ok: bool, msg: str}
         """
         res = {
             "ok": True,
             "msg": "Removido com sucesso!",
-            "carrinho": self.__get_cart_ids(id_usuario=id_usuario),
         }
 
         item = Carrinho.query.get((id_usuario, id_estoque))
@@ -144,7 +117,6 @@ class CartHandler:
         try:
             db.session.delete(item)
             db.session.commit()
-            res["carrinho"] = self.__get_cart_ids(id_usuario=id_usuario)
             return res
         except Exception:
             db.session.rollback()

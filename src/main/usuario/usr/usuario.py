@@ -4,9 +4,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.extensions import db
 
-from .carrinho import Carrinho
-from .enderecos import Endereco
-from .favoritos import Favoritos
+from ..addr import Endereco
+from ..cart import Carrinho
+from ..fav import Favoritos
 
 
 class Usuario(db.Model):
@@ -18,9 +18,6 @@ class Usuario(db.Model):
         db.String(300), nullable=False, unique=True
     )
     senha: Mapped[str] = mapped_column(db.String(300), nullable=False)
-    # profile_pic = mapped_column(
-    #     db.String(300), nullable=False, server_default=text("user.png")
-    # )
 
     favoritos: Mapped[List[Favoritos]] = relationship(
         argument="Favoritos",

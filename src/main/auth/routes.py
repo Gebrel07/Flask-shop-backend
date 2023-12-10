@@ -4,7 +4,7 @@ from flask_jwt_extended import set_access_cookies, unset_jwt_cookies
 from src.json_handler import JsonHandler
 from src.utils import make_json_resp
 
-from ..usuario.user_handler import UserHandler
+from ..usuario.usr import UserHandler
 
 auth_bp = Blueprint(name="auth", import_name=__name__, url_prefix="/auth")
 

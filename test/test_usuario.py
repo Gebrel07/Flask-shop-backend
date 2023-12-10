@@ -10,7 +10,7 @@ def test_get_cart(client: TestClient):
 
     assert resp is not None
     assert resp.status_code == 200
-    assert isinstance(resp.json["carrinho"], list)  # type: ignore
+    assert isinstance(resp.json["res"], list)  # type: ignore
 
 
 def test_add_to_cart(client: TestClient):
@@ -46,7 +46,7 @@ def test_get_favs(client: TestClient):
 
     assert resp is not None
     assert resp.status_code == 200
-    assert isinstance(resp.json["favoritos"], list)  # type: ignore
+    assert isinstance(resp.json["res"], list)  # type: ignore
 
 
 def test_add_to_fav(client: TestClient):
@@ -71,3 +71,15 @@ def test_remove_from_fav(client: TestClient):
 
     assert resp is not None
     assert resp.status_code == 200
+
+
+def test_get_enderecos(client: TestClient):
+    client.login_client(id_usuario=1)
+
+    key, val = client.get_x_csrf_header() or (0, 0)
+
+    resp = client.get("usuarios/1/enderecos/", headers={key: val})
+
+    assert resp is not None
+    assert resp.status_code == 200
+    assert isinstance(resp.json["res"], list)  # type: ignore

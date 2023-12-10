@@ -2,7 +2,7 @@ from flask import Flask
 
 from src.extensions import db
 from src.main.usuario import Usuario
-from src.main.usuario.user_handler import UserHandler
+from src.main.usuario.usr import UserHandler
 
 from .custom_client import TestClient
 

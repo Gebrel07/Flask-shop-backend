@@ -8,15 +8,15 @@ from .usuario import Usuario
 
 class UserHandler:
     def __init__(self) -> None:
-        pass
+        self.default_img = "default_user.png"
 
-    def get_infos_usuario(self, usuario: Usuario):
+    def get_user_json(self, usuario: Usuario):
         user_obj = {
             "id": usuario.id,
             "nome": usuario.nome,
             "email": usuario.email,
             "profile_pic": url_for(
-                "static", filename="user.png", _external=True
+                "static", filename=self.default_img, _external=True
             ),
         }
         return user_obj
@@ -75,7 +75,7 @@ class UserHandler:
         res["access_token"] = token
         res["csrf_access_token"] = get_csrf_token(encoded_token=token)
 
-        res["usuario"] = self.get_infos_usuario(usuario=usuario)
+        res["usuario"] = self.get_user_json(usuario=usuario)
 
         return res
 
@@ -122,6 +122,6 @@ class UserHandler:
         res["access_token"] = token
         res["csrf_access_token"] = get_csrf_token(encoded_token=token)
 
-        res["usuario"] = self.get_infos_usuario(usuario=new_user)
+        res["usuario"] = self.get_user_json(usuario=new_user)
 
         return res

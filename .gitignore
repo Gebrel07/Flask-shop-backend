@@ -1,4 +1,5 @@
 # my files
+.todo
 .flaskenv
 .vscode
 .venv

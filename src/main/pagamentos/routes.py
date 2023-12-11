@@ -13,4 +13,4 @@ pagamentos_bp = Blueprint(
 def get_meios_pgto():
     payment = PaymentHandler()
     res = payment.get_formas_pgto()
-    return make_json_resp(ok=True, pagamentos=res)
+    return make_json_resp(ok=True, res=res)

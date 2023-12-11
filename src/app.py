@@ -1,6 +1,3 @@
-import os
-
-from dotenv import dotenv_values
 from flask import Flask
 
 from .auth import jwt
@@ -12,14 +9,9 @@ from .routerefs import register_blueprints
 def create_app():
     app = Flask(import_name=__name__, instance_relative_config=True)
 
-    __dotenv_vals = dotenv_values(".flaskenv")
-
-    conf = Config(
-        json_path=os.path.join(
-            app.instance_path, __dotenv_vals.get("CONFIG_FILENAME")  # type: ignore
-        )
-    )
+    conf = Config()
     app.config.from_object(obj=conf)
+    conf.assert_app_configs(app=app)
 
     db.init_app(app=app)
     migrate.init_app(app=app, db=db)
